@@ -5,14 +5,19 @@ infrastructure, classify the activities it supports, and score it against
 one or more assessment frameworks as compliant / making progress / not
 compliant with optional notes, then export the result.
 
-Three frameworks are included today:
+Three frameworks are included today, each as its own JSON file under
+[`data/frameworks/`](data/frameworks/) — edit them directly to tweak
+principles, criteria, or copy, no code changes needed:
 
 - **[Principles of Open Scholarly Infrastructure (POSI) v2.0](https://openscholarlyinfrastructure.org/)**
-  — 20 principles across Governance, Sustainability, and Insurance.
-- **SPII v0.0.1** (draft) — 19 principles across Openness, Autonomy,
-  Sustainability, Interoperability, and Researcher-centric.
-- **OSR v0.1** (draft) — 25 principles adapting Jeroen Bosman and Jeroen
-  Sondervan's [open science resilience model](https://upstream.force11.org/the-resilience-of-open-science-in-times-of-crisis/),
+  ([`posi.json`](data/frameworks/posi.json)) — 20 principles across
+  Governance, Sustainability, and Insurance.
+- **SPII v0.0.1** (draft, [`spii.json`](data/frameworks/spii.json)) — 19
+  principles across Openness, Autonomy, Sustainability, Interoperability,
+  and Researcher-centric.
+- **OSR v0.1** (draft, [`osr.json`](data/frameworks/osr.json)) — 25
+  principles adapting Jeroen Bosman and Jeroen Sondervan's [open science
+  resilience model](https://upstream.force11.org/the-resilience-of-open-science-in-times-of-crisis/),
   related to the International Science Council's [*Protecting Science in
   Times of Crisis*](https://doi.org/10.24948/2024.01) (2024). Five areas of
   concern (funding, infrastructure, academic freedom, safety,
@@ -45,11 +50,16 @@ Three frameworks are included today:
 
 Also live at **[surf-ori.github.io/open-science-maturity](https://surf-ori.github.io/open-science-maturity/)**
 (GitHub Pages, served from this repo's `main` branch — no separate deploy
-step). Or open [`index.html`](index.html) directly in a browser, or serve
-the directory with any static file server; there is nothing to install or
-build — it's a single standalone HTML file. The top bar's Import/Export
-menus cover loading and saving a report or a custom framework by hand;
-"About" and "Changelog", also in the top bar, open as dialogs.
+step). Or serve the directory with any static file server (for example
+`python3 -m http.server`) and open `index.html` over http(s); there is
+nothing to install or build beyond that. **Opening `index.html` directly
+as a `file://` page no longer works** — the three built-in frameworks are
+loaded from [`data/frameworks/`](data/frameworks/) via `fetch()` at
+startup, and browsers block that kind of request from a `file://` page;
+you'll see a clear on-page message explaining this instead of a blank
+page. The top bar's Import/Export menus cover loading and saving a report
+or a custom framework by hand; "About" and "Changelog", also in the top
+bar, open as dialogs.
 
 [`examples/`](examples/) has three example POSI assessment reports based
 on published self-assessments from real infrastructures (OpenAIRE,
