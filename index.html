@@ -65,8 +65,18 @@
                 padding: var(--space-4) var(--space-6);
             }
 
+            /* Pre-existing bug, found while testing the toast region below:
+               a flex item's default min-width is auto (its content size), not
+               0, so this <strong> refused to shrink past its full text width
+               and wrapped across ~6 lines on narrow viewports instead of
+               yielding space to the Import/Export buttons. min-width: 0 lets
+               it shrink; the rest truncates the overflow with an ellipsis. */
             nav[data-topnav] > strong {
                 font-size: var(--text-4);
+                min-width: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
 
             .topnav-spacer {
