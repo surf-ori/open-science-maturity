@@ -5,12 +5,19 @@ infrastructure, classify the activities it supports, and score it against
 one or more assessment frameworks as compliant / making progress / not
 compliant with optional notes, then export the result.
 
-Two frameworks are included today:
+Three frameworks are included today:
 
 - **[Principles of Open Scholarly Infrastructure (POSI) v2.0](https://openscholarlyinfrastructure.org/)**
   — 20 principles across Governance, Sustainability, and Insurance.
 - **SPII v0.0.1** (draft) — 19 principles across Openness, Autonomy,
   Sustainability, Interoperability, and Researcher-centric.
+- **OSR v0.1** (draft) — 25 principles adapting Jeroen Bosman and Jeroen
+  Sondervan's [open science resilience model](https://upstream.force11.org/the-resilience-of-open-science-in-times-of-crisis/),
+  related to the International Science Council's [*Protecting Science in
+  Times of Crisis*](https://doi.org/10.24948/2024.01) (2024). Five areas of
+  concern (funding, infrastructure, academic freedom, safety,
+  disinformation), each scored across five resilience types (prevention,
+  protection, resistance, withstanding, repair).
 
 ## Features
 
@@ -24,8 +31,8 @@ Two frameworks are included today:
   unanswered) next to every principle in the sidebar navigation, so you can
   see progress at a glance without opening each section.
 - **Bring your own framework** — import a custom assessment framework
-  (JSON) at runtime alongside POSI and SPII, download a template to help
-  author one, and export whichever frameworks are currently loaded.
+  (JSON) at runtime alongside POSI, SPII, and OSR, download a template to
+  help author one, and export whichever frameworks are currently loaded.
 - **Export as JSON** — download your results and reload them later to
   continue or revise an assessment.
 - **Export as PDF** — download a report of the full assessment.
