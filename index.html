@@ -42,6 +42,17 @@
             body {
                 margin: 0;
                 font-family: var(--font-sans);
+                /* Defensive: at the narrowest real device width tested
+                   (320px, e.g. first-gen iPhone SE) a ~10px min-content
+                   overflow remains even after the grid/flex min-width fixes
+                   above, from no single element — it's the browser's
+                   shrink-to-fit sizing for the .row/.col-N pairs refusing to
+                   go below some inner content's min-content width. Rather
+                   than chase that last few px through Oat's grid internals,
+                   this keeps it from ever surfacing as a visible horizontal
+                   scrollbar; nothing on the page relies on horizontal
+                   scrolling. */
+                overflow-x: hidden;
             }
 
             /* The inset moves from body's margin onto #app here instead of
@@ -51,6 +62,7 @@
                sidebar visible past that inset when it's supposed to be hidden. */
             #app-shell > main {
                 padding: var(--space-8);
+                min-width: 0;
             }
 
             /* Constrains line length on wide viewports instead of letting content
@@ -61,19 +73,43 @@
                 margin-inline: auto;
             }
 
+            /* Confirmed overflowing horizontally on real Android/Chrome and
+               Android/Firefox (this repo's own dev-container testing under a
+               simulated mobile viewport wasn't catching it — see below for
+               why). Two layered causes:
+               1. nav[data-topnav] is grid-column: 1 / -1 inside #app-shell's
+                  grid, and — just like a flex item — a grid item's default
+                  min-width is auto (its content's own min-content size), not
+                  0. That let nav's rendered box grow wider than its 1fr grid
+                  track to fit its buttons' natural width instead of being
+                  clamped to the viewport, which is what made the dev-container
+                  Playwright checks miss it earlier: they measured individual
+                  children's computed sizes but never actually asserted
+                  document.documentElement.scrollWidth stayed within
+                  clientWidth. min-width: 0 here lets the grid item shrink.
+               2. Even shrunk to the viewport's width, the Import/Export
+                  dropdowns plus the About and Changelog buttons alone need
+                  roughly 340px, which doesn't fit next to the logo on a
+                  ~360-412px phone; flex-wrap lets them flow onto a second row
+                  instead of forcing nav wider than its (now-clamped) grid
+                  track. */
             nav[data-topnav] {
                 padding: var(--space-4) var(--space-6);
+                min-width: 0;
+                flex-wrap: wrap;
+                row-gap: var(--space-2);
             }
 
-            /* Pre-existing bug, found while testing the toast region below:
-               a flex item's default min-width is auto (its content size), not
-               0, so this <strong> refused to shrink past its full text width
-               and wrapped across ~6 lines on narrow viewports instead of
-               yielding space to the Import/Export buttons. min-width: 0 lets
-               it shrink; the rest truncates the overflow with an ellipsis. */
+            /* Also a real bug, found alongside the above: a flex item's
+               default min-width is auto (its content size), not 0, so this
+               <strong> refused to shrink past its full text width and
+               wrapped across ~6 lines instead of yielding space to whatever
+               else was on its row. min-width: 0 lets it shrink; the rest
+               truncates the overflow with an ellipsis rather than wrapping. */
             nav[data-topnav] > strong {
                 font-size: var(--text-4);
                 min-width: 0;
+                max-width: 100%;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -243,8 +279,18 @@
                 visibility: visible;
             }
 
+            /* Real bug, not a font/glyph issue as it first looked on a phone
+               screenshot: oat.min.css's base button rule sets
+               color: var(--primary-foreground) (white) globally, and
+               [data-sidebar-toggle] only overrides background (to none) —
+               not color — so this button's icon has always rendered white
+               on the page's white background. Invisible in both the old
+               Unicode "☰" character and the SVG icon that replaced it;
+               the SVG made it possible to spot in a code review (a blank
+               button, rather than a plausible-looking tofu glyph). */
             [data-sidebar-toggle] {
                 margin-bottom: var(--space-2);
+                color: var(--foreground);
             }
 
             @media print {
@@ -384,8 +430,12 @@
 
             /* nav[data-topnav] is position: sticky and sits at the very top of
                the viewport (Oat's own layout); a fixed-position toast anchored
-               to plain var(--space-4) would render underneath/behind it, so
-               the offset clears the nav's rendered height (~72px) instead. */
+               to plain var(--space-4) would render underneath/behind it. This
+               top is only the pre-JS fallback (~72px, nav's un-wrapped
+               height) — show_toast() overwrites it with nav's actual current
+               getBoundingClientRect().bottom on every call, since nav can now
+               wrap onto 2-3 rows on narrow viewports and a hardcoded value
+               can't track that. */
             #toast-region {
                 position: fixed;
                 top: 5rem;
@@ -464,6 +514,7 @@
 
             const CHANGELOG_HTML =
                 "<dl>" +
+                '<dt>2026-09-15</dt><dd>Fixed the top bar genuinely overflowing horizontally on narrow phones (confirmed on real Android Chrome and Firefox), which the previous “fixed the title wrapping” entry below did not fully resolve on its own: <code>nav[data-topnav]</code> is a CSS Grid item and — like a flex item — defaults to <code>min-width: auto</code>, letting it grow wider than its column to fit its buttons; it now also wraps its buttons onto extra rows on narrow viewports. Also fixed the mobile menu (hamburger) icon rendering invisible — white-on-white due to an inherited button text color, not a missing icon glyph as it first appeared — and made the dismissible toast notices position themselves below the top bar correctly now that its height can vary.</dd>' +
                 '<dt>2026-09-15</dt><dd>Design pass: fixed the <code>--font-sans</code> token (“Source Sans 3”) never actually loading, so the page was silently rendering system fonts everywhere including the exported badge; added a hover/active state to the compliant/progress/non-compliant picker cards, which previously gave no feedback on mouse interaction; replaced every <code>window.alert()</code> (JSON import errors, partial framework imports, failed badge downloads) with a dismissible toast notice; fixed the top bar’s title wrapping across several lines on narrow viewports instead of truncating; added a shadow to each framework tab’s panel to match Oat’s own card styling, and page description/social-sharing meta tags.</dd>' +
                 '<dt>2026-09-15</dt><dd>The three built-in frameworks (POSI, SPII, OSR) moved out of <code>index.html</code> into standalone JSON files under <code>data/frameworks/</code>, loaded via <code>fetch()</code> at startup — edit a framework’s principles or criteria directly in its JSON file, no code change needed. As a result, opening <code>index.html</code> directly as a <code>file://</code> page no longer works (browsers block that fetch); serve the directory with any static file server instead, as already recommended for the <code>?report=</code>/<code>?framework=</code> URL-parameter loader. A clear on-page message explains this if frameworks fail to load.</dd>' +
                 '<dt>2026-09-15</dt><dd>Added a third framework, OSR v0.1 (draft) — an adaptation of Jeroen Bosman and Jeroen Sondervan’s open science resilience model from <a href="https://upstream.force11.org/the-resilience-of-open-science-in-times-of-crisis/">“The Resilience of Open Science in Times of Crisis”</a> (Upstream, FORCE11, 2025), related to the International Science Council’s <em>Protecting Science in Times of Crisis</em> (2024). 25 principles across five areas of concern (funding, infrastructure, academic freedom, safety, disinformation), each scored across five resilience types (prevention, protection, resistance, withstanding, repair).</dd>' +
@@ -662,7 +713,9 @@
 
         <div data-sidebar-layout id="app-shell">
             <nav data-topnav>
-                <button type="button" id="sidebar-toggle" data-sidebar-toggle aria-label="Toggle navigation" aria-expanded="false">☰</button>
+                <button type="button" id="sidebar-toggle" data-sidebar-toggle aria-label="Toggle navigation" aria-expanded="false">
+                    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke-linecap="round" /></svg>
+                </button>
                 <svg width="39" height="28" viewBox="0 0 236 168" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                     <g stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
                         <g transform="translate(30, 30)">
@@ -753,6 +806,13 @@
 
             function show_toast(message, variant) {
                 const toastRegion = document.getElementById("toast-region");
+                // nav[data-topnav] now wraps onto 2-3 rows on narrow viewports
+                // (see CSS), so its rendered height is no longer a fixed
+                // constant the way a hardcoded CSS top: 5rem assumed — read
+                // it fresh on every call instead, since a toast can be shown
+                // at any viewport width.
+                const navBottom = document.querySelector("nav[data-topnav]").getBoundingClientRect().bottom;
+                toastRegion.style.top = Math.max(navBottom + 12, 0) + "px";
                 const toast = document.createElement("div");
                 toast.setAttribute("role", "alert");
                 toast.setAttribute("data-variant", variant || "error");
