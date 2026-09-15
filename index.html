@@ -4,6 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Open Science Infrastructure Self-Assessment Tool</title>
+        <meta name="description" content="Self-assess an Open Science infrastructure against POSI, SPII, and OSR — score principles as compliant, in progress, or not compliant, classify its activities, and export a report or a shareable badge.">
+        <meta property="og:title" content="Open Science Infrastructure Self-Assessment Tool">
+        <meta property="og:description" content="Self-assess an Open Science infrastructure against POSI, SPII, and OSR, then export a report or a shareable badge.">
+        <meta property="og:type" content="website">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
         <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjM2cHgiIGhlaWdodD0iMTY4cHgiIHZpZXdCb3g9IjAgMCAyMzYgMTY4IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPHRpdGxlPkZyYW1lIENvcHk8L3RpdGxlPgogICAgPGcgaWQ9IkZyYW1lLUNvcHkiIHN0cm9rZT0ibm9uZSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2Utd2lkdGg9IjEiPgogICAgICAgIDxnIGlkPSJMYWFnXzEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMwLCAzMCkiPgogICAgICAgICAgICA8cGF0aCBkPSJNMTkwLjM0NCw2NC45MTg1NDQ0IEMxOTguOTk2LDY0LjkxODU0NDQgMjA2LDcyLjE1NDY4NzkgMjA2LDgxLjA0NDgwNyBMMjA2LDkxLjM4MjE1NDkgQzIwNiwxMDAuMjcyMjc0IDE5OC45OTYsMTA3LjUwODQxOCAxOTAuMzQ0LDEwNy41MDg0MTggTDE2Ni42NTQsMTA3LjUwODQxOCBDMTU4LjAwMiwxMDcuNTA4NDE4IDE1MC45OTgsMTAwLjI3MjI3NCAxNTAuOTk4LDkxLjM4MjE1NDkgTDE1MC45OTgsODQuOTcyOTk5MiBDMTUwLjk5OCw3My44MDg2NjM2IDE0Mi4xNCw2NC45MTg1NDQ0IDEzMS40MjgsNjQuOTE4NTQ0NCBMMTkuNTcsNjQuOTE4NTQ0NCBDOC42NTIsNjQuOTE4NTQ0NCAwLDU2LjAyODQyNTMgMCw0NC44NjQwODk2IEwwLDIwLjA1NDQ1NDggQzAsOC44OTAxMTkxNCA4Ljg1OCwwIDE5LjU3LDAgTDEzMS40MjgsMCBDMTQyLjM0NiwwIDE1MC45OTgsOC44OTAxMTkxNCAxNTAuOTk4LDIwLjA1NDQ1NDggTDE1MC45OTgsNDQuODY0MDg5NiBDMTUwLjk5OCw1Ni4wMjg0MjUzIDE1OS44NTYsNjQuOTE4NTQ0NCAxNzAuNTY4LDY0LjkxODU0NDQgTDE5MC4zNDQsNjQuOTE4NTQ0NCBaIiBpZD0iYV8xXyIgZmlsbD0iIzAwMDAwMCI+PC9wYXRoPgogICAgICAgICAgICA8cGF0aCBkPSJNMTI0LjgzNiwzNi44MDA5NTgzIEMxMjYuODk2LDM2LjgwMDk1ODMgMTI3LjkyNiwzNS43NjcyMjM1IDEyNy45MjYsMzMuNjk5NzUzOSBDMTI3LjkyNiwzMS42MzIyODQ0IDEyNi44OTYsMzAuMzkxODAyNiAxMjQuODM2LDMwLjM5MTgwMjYgTDExNy4wMDgsMzAuMzkxODAyNiBMMTE3LjAwOCwyNC4xODkzOTM5IEwxMjkuMzY4LDI0LjE4OTM5MzkgQzEzMS40MjgsMjQuMTg5MzkzOSAxMzIuNDU4LDIzLjE1NTY1OTIgMTMyLjQ1OCwyMC44ODE0NDI2IEMxMzIuNDU4LDE4LjgxMzk3MzEgMTMxLjQyOCwxNy43ODAyMzgzIDEyOS4zNjgsMTcuNzgwMjM4MyBMMTEzLjcxMiwxNy43ODAyMzgzIEMxMTEuNjUyLDE3Ljc4MDIzODMgMTEwLjQxNiwxOC44MTM5NzMxIDExMC40MTYsMjEuMDg4MTg5NiBMMTEwLjQxNiw0My44MzAzNTQ4IEMxMTAuNDE2LDQ2LjEwNDU3MTQgMTExLjQ0Niw0Ny4xMzgzMDYxIDExMy43MTIsNDcuMTM4MzA2MSBDMTE1Ljc3Miw0Ny4xMzgzMDYxIDExNy4wMDgsNDYuMTA0NTcxNCAxMTcuMDA4LDQzLjgzMDM1NDggTDExNy4wMDgsMzYuNTk0MjExMyBDMTE3LjAwOCwzNi44MDA5NTgzIDEyNC44MzYsMzYuODAwOTU4MyAxMjQuODM2LDM2LjgwMDk1ODMgTDEyNC44MzYsMzYuODAwOTU4MyBaIE05OS4wODYsMzYuMTgwNzE3NCBDMTAxLjk3LDM0LjczMzQ4ODcgMTAzLjYxOCwzMS44MzkwMzEzIDEwMy42MTgsMjguMTE3NTg2MSBDMTAzLjYxOCwyMi4xMjE5MjQ0IDk5LjI5MiwxNy43ODAyMzgzIDkzLjExMiwxNy43ODAyMzgzIEw4My44NDIsMTcuNzgwMjM4MyBDODEuNzgyLDE3Ljc4MDIzODMgODAuNTQ2LDE4LjgxMzk3MzEgODAuNTQ2LDIxLjA4ODE4OTYgTDgwLjU0Niw0My44MzAzNTQ4IEM4MC41NDYsNDYuMTA0NTcxNCA4MS41NzYsNDcuMTM4MzA2MSA4My44NDIsNDcuMTM4MzA2MSBDODUuOTAyLDQ3LjEzODMwNjEgODcuMTM4LDQ2LjEwNDU3MTQgODcuMTM4LDQzLjgzMDM1NDggTDg3LjEzOCwzNy44MzQ2OTMxIEw5Mi43LDM3LjgzNDY5MzEgTDk1Ljk5Niw0NC44NjQwODk2IEM5Ni42MTQsNDYuMzExMzE4MyA5Ny40MzgsNDYuOTMxNTU5MiA5OC42NzQsNDYuOTMxNTU5MiBDMTAwLjMyMiw0Ni45MzE1NTkyIDEwMi4zODIsNDUuNjkxMDc3NCAxMDIuMzgyLDQzLjgzMDM1NDggQzEwMi4zODIsNDMuMjEwMTE0IDEwMi4xNzYsNDIuNTg5ODczMSAxMDEuOTcsNDEuOTY5NjMyMiBMOTkuMDg2LDM2LjE4MDcxNzQgTDk5LjA4NiwzNi4xODA3MTc0IFogTTkyLjI4OCwzMi4wNDU3NzgzIEw4Ni43MjYsMzIuMDQ1Nzc4MyBMODYuNzI2LDI0LjE4OTM5MzkgTDkyLjI4OCwyNC4xODkzOTM5IEM5NC43NiwyNC4xODkzOTM5IDk2LjgyLDI1LjQyOTg3NTcgOTYuODIsMjguMTE3NTg2MSBDOTYuODIsMzAuODA1Mjk2NiA5NC43NiwzMi4wNDU3NzgzIDkyLjI4OCwzMi4wNDU3NzgzIFogTTY2LjEyNiwzMy42OTk3NTM5IEM2Ni4xMjYsMzguMjQ4MTg3IDYzLjQ0OCw0MC45MzU4OTc0IDU5Ljc0LDQwLjkzNTg5NzQgQzU2LjAzMiw0MC45MzU4OTc0IDUzLjM1NCwzOC4yNDgxODcgNTMuMzU0LDMzLjY5OTc1MzkgTDUzLjM1NCwyMC44ODE0NDI2IEM1My4zNTQsMTguNjA3MjI2MSA1Mi4zMjQsMTcuNTczNDkxMyA1MC4wNTgsMTcuNTczNDkxMyBDNDcuOTk4LDE3LjU3MzQ5MTMgNDYuNzYyLDE4LjYwNzIyNjEgNDYuNzYyLDIwLjg4MTQ0MjYgTDQ2Ljc2MiwzMy42OTk3NTM5IEM0Ni43NjIsNDIuMTc2Mzc5MiA1Mi4zMjQsNDcuNTUxODAwMSA1OS43NCw0Ny41NTE4MDAxIEM2Ny4xNTYsNDcuNTUxODAwMSA3Mi43MTgsNDIuMTc2Mzc5MiA3Mi43MTgsMzMuNjk5NzUzOSBMNzIuNzE4LDIwLjg4MTQ0MjYgQzcyLjcxOCwxOC42MDcyMjYxIDcxLjY4OCwxNy41NzM0OTEzIDY5LjQyMiwxNy41NzM0OTEzIEM2Ny4zNjIsMTcuNTczNDkxMyA2Ni4xMjYsMTguNjA3MjI2MSA2Ni4xMjYsMjAuODgxNDQyNiBMNjYuMTI2LDMzLjY5OTc1MzkgTDY2LjEyNiwzMy42OTk3NTM5IFogTTI5LjI1Miw0MS4zNDkzOTEzIEMyNi43OCw0MS4zNDkzOTEzIDI0LjkyNiw0MC43MjkxNTA1IDIzLjY5LDQwLjMxNTY1NjYgQzIyLjY2LDM5LjkwMjE2MjcgMjEuODM2LDM5LjY5NTQxNTcgMjAuODA2LDM5LjY5NTQxNTcgQzE4Ljk1MiwzOS42OTU0MTU3IDE3LjkyMiw0MC45MzU4OTc0IDE3LjkyMiw0Mi43OTY2MiBDMTcuOTIyLDQ1Ljg5NzgyNDQgMjQuMTAyLDQ3LjU1MTgwMDEgMjkuNDU4LDQ3LjU1MTgwMDEgQzM1Ljg0NCw0Ny41NTE4MDAxIDQwLjc4OCw0NC4wMzcxMDE4IDQwLjc4OCwzOC42NjE2ODA5IEM0MC43ODgsMzMuNjk5NzUzOSAzNy40OTIsMzEuNDI1NTM3NCAzMy45OSwzMC4xODUwNTU3IEwyOC42MzQsMjguNTMxMDggQzI2LjM2OCwyNy45MTA4MzkyIDI1LjMzOCwyNy4yOTA1OTgzIDI1LjMzOCwyNS44NDMzNjk2IEMyNS4zMzgsMjQuMzk2MTQwOSAyNy42MDQsMjMuNTY5MTUzMSAyOS40NTgsMjMuNTY5MTUzMSBDMzEuNzI0LDIzLjU2OTE1MzEgMzMuMzcyLDI0LjE4OTM5MzkgMzQuNjA4LDI0LjYwMjg4NzkgQzM1LjQzMiwyNC44MDk2MzQ4IDM2LjI1NiwyNS4yMjMxMjg3IDM3LjI4NiwyNS4yMjMxMjg3IEMzOC45MzQsMjUuMjIzMTI4NyAzOS45NjQsMjMuOTgyNjQ3IDM5Ljk2NCwyMi4xMjE5MjQ0IEMzOS45NjQsMTkuMDIwNzIgMzQuNDAyLDE3LjM2Njc0NDQgMjkuNDU4LDE3LjM2Njc0NDQgQzIzLjI3OCwxNy4zNjY3NDQ0IDE4Ljc0NiwyMC44ODE0NDI2IDE4Ljc0NiwyNi4wNTAxMTY2IEMxOC43NDYsMzAuMzkxODAyNiAyMS44MzYsMzIuODcyNzY2MSAyNS4xMzIsMzMuOTA2NTAwOSBMMjkuODcsMzUuMzUzNzI5NiBDMzIuMzQyLDM2LjE4MDcxNzQgMzQuMTk2LDM2LjgwMDk1ODMgMzQuMTk2LDM4LjI0ODE4NyBDMzMuNzg0LDQwLjMxNTY1NjYgMzEuMzEyLDQxLjM0OTM5MTMgMjkuMjUyLDQxLjM0OTM5MTMgTDI5LjI1Miw0MS4zNDkzOTEzIFoiIGlkPSJTaGFwZSIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1ydWxlPSJub256ZXJvIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=">
         <!-- <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css"> -->
         <link rel="stylesheet" href="oat.min.css">
@@ -58,8 +65,18 @@
                 padding: var(--space-4) var(--space-6);
             }
 
+            /* Pre-existing bug, found while testing the toast region below:
+               a flex item's default min-width is auto (its content size), not
+               0, so this <strong> refused to shrink past its full text width
+               and wrapped across ~6 lines on narrow viewports instead of
+               yielding space to the Import/Export buttons. min-width: 0 lets
+               it shrink; the rest truncates the overflow with an ellipsis. */
             nav[data-topnav] > strong {
                 font-size: var(--text-4);
+                min-width: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
 
             .topnav-spacer {
@@ -116,6 +133,15 @@
             .status-card {
                 cursor: pointer;
                 border: 2px solid transparent;
+                transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+            }
+
+            .status-card:hover {
+                background-color: var(--accent);
+            }
+
+            .status-card:active {
+                transform: scale(0.98);
             }
 
             .status-card.selected[data-status="compliant"] { border-color: var(--compliant); }
@@ -298,7 +324,19 @@
                 color: var(--card-foreground);
                 border: 1px solid var(--border);
                 border-radius: var(--radius-medium);
+                box-shadow: var(--shadow-small);
                 padding: var(--space-6);
+            }
+
+            /* text-wrap: balance keeps headings from stranding a lone word on
+               the last line; pretty does the softer equivalent for body copy.
+               Both are additive — browsers without support just ignore them. */
+            h1, h2, h3, h4, .summary-heading {
+                text-wrap: balance;
+            }
+
+            p {
+                text-wrap: pretty;
             }
 
             /* The containing <a> is a flex row (Oat's nav styling); without
@@ -343,6 +381,60 @@
                 border: none;
                 background: none;
             }
+
+            /* nav[data-topnav] is position: sticky and sits at the very top of
+               the viewport (Oat's own layout); a fixed-position toast anchored
+               to plain var(--space-4) would render underneath/behind it, so
+               the offset clears the nav's rendered height (~72px) instead. */
+            #toast-region {
+                position: fixed;
+                top: 5rem;
+                right: var(--space-4);
+                z-index: 100;
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-2);
+                width: min(24rem, calc(100vw - var(--space-8)));
+            }
+
+            #toast-region [role="alert"] {
+                box-shadow: var(--shadow-medium);
+                animation: toast-in var(--transition-fast) ease-out;
+            }
+
+            #toast-region [role="alert"] p {
+                margin: 0;
+                text-wrap: pretty;
+            }
+
+            .toast-close {
+                all: unset;
+                cursor: pointer;
+                margin-inline-start: auto;
+                padding: 0 var(--space-2);
+                color: inherit;
+                opacity: 0.6;
+            }
+
+            .toast-close:hover,
+            .toast-close:focus-visible {
+                opacity: 1;
+            }
+
+            @keyframes toast-in {
+                from { opacity: 0; transform: translateY(-6px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            @media print {
+                #toast-region {
+                    display: none;
+                }
+            }
+
+            body.printing #toast-region {
+                display: none;
+            }
         </style>
         <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
         <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -372,6 +464,7 @@
 
             const CHANGELOG_HTML =
                 "<dl>" +
+                '<dt>2026-09-15</dt><dd>Design pass: fixed the <code>--font-sans</code> token (“Source Sans 3”) never actually loading, so the page was silently rendering system fonts everywhere including the exported badge; added a hover/active state to the compliant/progress/non-compliant picker cards, which previously gave no feedback on mouse interaction; replaced every <code>window.alert()</code> (JSON import errors, partial framework imports, failed badge downloads) with a dismissible toast notice; fixed the top bar’s title wrapping across several lines on narrow viewports instead of truncating; added a shadow to each framework tab’s panel to match Oat’s own card styling, and page description/social-sharing meta tags.</dd>' +
                 '<dt>2026-09-15</dt><dd>The three built-in frameworks (POSI, SPII, OSR) moved out of <code>index.html</code> into standalone JSON files under <code>data/frameworks/</code>, loaded via <code>fetch()</code> at startup — edit a framework’s principles or criteria directly in its JSON file, no code change needed. As a result, opening <code>index.html</code> directly as a <code>file://</code> page no longer works (browsers block that fetch); serve the directory with any static file server instead, as already recommended for the <code>?report=</code>/<code>?framework=</code> URL-parameter loader. A clear on-page message explains this if frameworks fail to load.</dd>' +
                 '<dt>2026-09-15</dt><dd>Added a third framework, OSR v0.1 (draft) — an adaptation of Jeroen Bosman and Jeroen Sondervan’s open science resilience model from <a href="https://upstream.force11.org/the-resilience-of-open-science-in-times-of-crisis/">“The Resilience of Open Science in Times of Crisis”</a> (Upstream, FORCE11, 2025), related to the International Science Council’s <em>Protecting Science in Times of Crisis</em> (2024). 25 principles across five areas of concern (funding, infrastructure, academic freedom, safety, disinformation), each scored across five resilience types (prevention, protection, resistance, withstanding, repair).</dd>' +
                 '<dt>2026-08-27</dt><dd>Renamed to “Open Science Infrastructure Self-Assessment Tool” and moved to <a href="https://github.com/surf-ori/open-science-maturity">github.com/surf-ori/open-science-maturity</a>, now also live at <a href="https://surf-ori.github.io/open-science-maturity/">surf-ori.github.io/open-science-maturity</a>. Visual refresh leaning on Oat’s own grid and type scale; main content moved into tabs (one per framework, showing a live scored/total count); sidebar navigation now lists every principle individually with a compliant/progress/non-compliant/unanswered status icon; a top bar with the app title and Import/Export menus, plus About and Changelog as dialogs instead of taking up space in the sidebar and main content. You can now import your own custom assessment framework (JSON) alongside POSI and SPII, download a template to help author one, and export whichever frameworks are currently loaded; a report and/or a custom framework can also be loaded automatically via <code>?report=</code>/<code>?framework=</code> URL parameters when the page is served over http(s). Added example POSI assessment reports based on real published self-assessments (OpenAIRE, OpenAlex, HAL+/CCSD), one-click loadable from the About dialog. Author identifiers (ORCID) and affiliations (ROR) are now on record in <code>CITATION.cff</code> and credited in the About dialog. Added the SURF logo to the top bar and as the favicon. Fixed the Import/Export menus to match Oat’s own dropdown behaviour (items now highlight on hover/focus, matching the component library) and gave the Export items the same description text as Import’s.</dd>' +
@@ -647,6 +740,7 @@
             </aside>
             <main id="app"></main>
         </div>
+        <div id="toast-region" aria-live="assertive" aria-atomic="true"></div>
 
         <script id="app-render">
             let state = null;
@@ -655,6 +749,25 @@
 
             function all_frameworks() {
                 return FRAMEWORKS.concat(state.customFrameworks);
+            }
+
+            function show_toast(message, variant) {
+                const toastRegion = document.getElementById("toast-region");
+                const toast = document.createElement("div");
+                toast.setAttribute("role", "alert");
+                toast.setAttribute("data-variant", variant || "error");
+                const text = document.createElement("p");
+                text.textContent = message;
+                toast.appendChild(text);
+                const closeBtn = document.createElement("button");
+                closeBtn.type = "button";
+                closeBtn.className = "toast-close";
+                closeBtn.setAttribute("aria-label", "Dismiss");
+                closeBtn.textContent = "×";
+                closeBtn.addEventListener("click", () => toast.remove());
+                toast.appendChild(closeBtn);
+                toastRegion.appendChild(toast);
+                setTimeout(() => toast.remove(), 8000);
             }
 
             function render() {
@@ -1187,7 +1300,7 @@
                     try {
                         parsed = JSON.parse(reader.result);
                     } catch (err) {
-                        alert("That file is not valid JSON.");
+                        show_toast("That file is not valid JSON.", "error");
                         return;
                     }
                     state = merge_loaded_state(parsed);
@@ -1239,7 +1352,7 @@
                     try {
                         parsed = JSON.parse(reader.result);
                     } catch (err) {
-                        alert("That file is not valid JSON.");
+                        show_toast("That file is not valid JSON.", "error");
                         return;
                     }
                     import_custom_frameworks(Array.isArray(parsed) ? parsed : [parsed]);
@@ -1272,9 +1385,9 @@
                 const { addedCount, skipped } = add_valid_frameworks(frameworks);
                 if (addedCount > 0) render();
                 if (skipped.length > 0) {
-                    alert("Some frameworks could not be imported: " + skipped.join(", "));
+                    show_toast("Some frameworks could not be imported: " + skipped.join(", "), "warning");
                 } else if (addedCount === 0) {
-                    alert("No valid assessment framework found in that file.");
+                    show_toast("No valid assessment framework found in that file.", "error");
                 }
             }
 
@@ -1285,7 +1398,7 @@
                         return response.json();
                     })
                     .catch((err) => {
-                        alert('Could not load ' + label + ' from "' + url + '": ' + err.message);
+                        show_toast('Could not load ' + label + ' from "' + url + '": ' + err.message, "error");
                         return null;
                     });
             }
@@ -1306,7 +1419,7 @@
                         const { addedCount, skipped } = add_valid_frameworks(frameworksToAdd);
                         if (addedCount > 0) changed = true;
                         if (skipped.length > 0) {
-                            alert("Some frameworks from the URL could not be loaded: " + skipped.join(", "));
+                            show_toast("Some frameworks from the URL could not be loaded: " + skipped.join(", "), "warning");
                         }
                     }
                     if (reportData) {
@@ -1525,7 +1638,7 @@
                     URL.revokeObjectURL(url);
                     canvas.toBlob((blob) => {
                         if (!blob) {
-                            alert("Could not generate the badge image.");
+                            show_toast("Could not generate the badge image.", "error");
                             return;
                         }
                         trigger_download(URL.createObjectURL(blob), "badge.png");
@@ -1533,7 +1646,7 @@
                 };
                 img.onerror = () => {
                     URL.revokeObjectURL(url);
-                    alert("Could not generate the badge image.");
+                    show_toast("Could not generate the badge image.", "error");
                 };
                 img.src = url;
             }
@@ -1620,7 +1733,7 @@
             function render_boot_error(err) {
                 console.error(err);
                 document.getElementById("app").innerHTML =
-                    '<div role="alert" data-variant="warning" class="card">' +
+                    '<div role="alert" data-variant="error">' +
                     "<p><strong>Could not load the assessment frameworks.</strong></p>" +
                     "<p>This page loads POSI, SPII, and OSR from JSON files in <code>data/frameworks/</code> via <code>fetch()</code>, which requires the page to be served over http(s) — it will not work when opened directly as a <code>file://</code> page. Serve this directory with any static file server (for example <code>python3 -m http.server</code>, then open <code>http://localhost:8000/</code>) and reload.</p>" +
                     "</div>";
