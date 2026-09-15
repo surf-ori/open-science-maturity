@@ -372,6 +372,8 @@
 
             const CHANGELOG_HTML =
                 "<dl>" +
+                '<dt>2026-09-15</dt><dd>The three built-in frameworks (POSI, SPII, OSR) moved out of <code>index.html</code> into standalone JSON files under <code>data/frameworks/</code>, loaded via <code>fetch()</code> at startup — edit a framework’s principles or criteria directly in its JSON file, no code change needed. As a result, opening <code>index.html</code> directly as a <code>file://</code> page no longer works (browsers block that fetch); serve the directory with any static file server instead, as already recommended for the <code>?report=</code>/<code>?framework=</code> URL-parameter loader. A clear on-page message explains this if frameworks fail to load.</dd>' +
+                '<dt>2026-09-15</dt><dd>Added a third framework, OSR v0.1 (draft) — an adaptation of Jeroen Bosman and Jeroen Sondervan’s open science resilience model from <a href="https://upstream.force11.org/the-resilience-of-open-science-in-times-of-crisis/">“The Resilience of Open Science in Times of Crisis”</a> (Upstream, FORCE11, 2025), related to the International Science Council’s <em>Protecting Science in Times of Crisis</em> (2024). 25 principles across five areas of concern (funding, infrastructure, academic freedom, safety, disinformation), each scored across five resilience types (prevention, protection, resistance, withstanding, repair).</dd>' +
                 '<dt>2026-08-27</dt><dd>Renamed to “Open Science Infrastructure Self-Assessment Tool” and moved to <a href="https://github.com/surf-ori/open-science-maturity">github.com/surf-ori/open-science-maturity</a>, now also live at <a href="https://surf-ori.github.io/open-science-maturity/">surf-ori.github.io/open-science-maturity</a>. Visual refresh leaning on Oat’s own grid and type scale; main content moved into tabs (one per framework, showing a live scored/total count); sidebar navigation now lists every principle individually with a compliant/progress/non-compliant/unanswered status icon; a top bar with the app title and Import/Export menus, plus About and Changelog as dialogs instead of taking up space in the sidebar and main content. You can now import your own custom assessment framework (JSON) alongside POSI and SPII, download a template to help author one, and export whichever frameworks are currently loaded; a report and/or a custom framework can also be loaded automatically via <code>?report=</code>/<code>?framework=</code> URL parameters when the page is served over http(s). Added example POSI assessment reports based on real published self-assessments (OpenAIRE, OpenAlex, HAL+/CCSD), one-click loadable from the About dialog. Author identifiers (ORCID) and affiliations (ROR) are now on record in <code>CITATION.cff</code> and credited in the About dialog. Added the SURF logo to the top bar and as the favicon. Fixed the Import/Export menus to match Oat’s own dropdown behaviour (items now highlight on hover/focus, matching the component library) and gave the Export items the same description text as Import’s.</dd>' +
                 '<dt>2026-08-26</dt><dd>Redesigned sidebar navigation and assessment badge; added support for multiple assessment frameworks side by side, with SPII v0.0.1 (draft) alongside POSI; inline SVG icons for maturity levels and classification activities.</dd>' +
                 '<dt>2026-08-25</dt><dd>Rebuilt around the POSI v2.0 principles as a data-driven framework, with JSON export/reload and a downloadable assessment badge (SVG/PNG).</dd>' +
@@ -417,123 +419,25 @@
                 return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
             }
 
-            const POSI = [
-                {
-                    section: "Governance",
-                    sourceUrl: "https://openscholarlyinfrastructure.org/#governance",
-                    principles: [
-                        { id: "coverage", title: "Coverage across the scholarly enterprise", text: "Research transcends disciplines, geography, institutions, and stakeholders. Organisations and the infrastructure they run need to reflect this." },
-                        { id: "stakeholder-governed", title: "Stakeholder governed", text: "A board-governed organisation drawn from the stakeholder community builds confidence that the organisation will make decisions driven by community consensus and a balance of interests." },
-                        { id: "non-discriminatory", title: "Non-discriminatory participation or membership", text: "We see the best option to be an “opt-in” approach with principles of non-discrimination and inclusivity, where any relevant group may express an interest and should be welcome. Representation in governance must reflect the character of the community or membership." },
-                        { id: "transparent-governance", title: "Transparent governance", text: "To foster trust, the processes and policies for governing the organisation and selecting representatives to governance groups should be transparent (within the constraints of privacy laws)." },
-                        { id: "cannot-lobby", title: "Cannot lobby", text: "Infrastructure organisations should not lobby for regulatory change to cement their own positions or narrow self-interest. However, an infrastructure organisation’s role is to support its community, and this can include advocating for policy changes." },
-                        { id: "living-will", title: "Living will", text: "To build trust, organisations should establish and communicate clear commitments regarding their long-term stewardship responsibilities, including the principles by which assets, data, resources, services, and staff would be responsibly transferred to a successor or the organisation or service wound down. The commitments should address future governance, with defined criteria for acceptable successor organisations. This should include continued alignment with POSI and any legal or structural constraints." },
-                        { id: "regular-review", title: "Regular review of purpose and community value", text: "Organisations and services should regularly review their relevance, effectiveness, and the level of community support to determine whether their continued operation is necessary. If no longer needed, they should take responsible steps to transition or wind down operations in consultation with the community and in alignment with their living will." },
-                    ],
-                },
-                {
-                    section: "Sustainability",
-                    sourceUrl: "https://openscholarlyinfrastructure.org/#sustainability",
-                    principles: [
-                        { id: "transparent-operations", title: "Transparent operations", text: "To enable organisational accountability and openness, the operating policies and procedures, detailed financials, sustainability models, fees, strategic and product roadmaps, organisational charts, and other appropriate operational information should be made openly available (within the constraints of privacy laws). Information should be available for investigation and reuse by the community." },
-                        { id: "time-limited-funds", title: "Time-limited funds are used only for time-limited activities", text: "Operations should be supported by sustainable revenue sources, whereas time-limited funds are used only for time-limited activities. Depending on grants to fund ongoing and/or long-term operations fully makes organisations fragile and distracts from maintaining core infrastructure." },
-                        { id: "generate-surplus", title: "Goal to generate surplus", text: "It is not enough to merely survive; organisations and services have to be able to adapt and change. Organisations and services that define long-term sustainability based only on recovering costs risk becoming brittle and stagnant. To weather economic, social and technological volatility, organisations and services need financial resources beyond immediate operating costs." },
-                        { id: "financial-reserves", title: "Establish and maintain financial reserves guided by policy", text: "Organisations and services should have a clear policy on maintaining financial reserves, including the purpose, minimum and maximum level, and governance of these funds. The actual level of reserves should be determined and periodically reviewed by the governing body, ensuring that resources are available to support Living Will implementation, including an orderly wind-down, transition to a successor, or response to major unforeseen events. A financial reserve policy might include how funds will be held, under what circumstances they will be used, and how much would be necessary for an adequate wind-down or transfer of assets, given the complexity of the organisation’s infrastructure." },
-                        { id: "mission-consistent-revenue", title: "Mission-consistent revenue generation", text: "Revenue sources should be evaluated against the infrastructure’s mission and not run counter to the aims of the organisation or service." },
-                        { id: "revenue-not-data", title: "Revenue generated from services, not data", text: "Data related to the running of the scholarly infrastructure should be community property. Appropriate revenue sources might include value-added services, consulting, API Service Level Agreements, or membership fees." },
-                        { id: "volunteer-labour", title: "Volunteer labour", text: "Organisations that rely on volunteers and their labour should recognise this as a valuable resource for the organisation’s long-term viability, and factor it into sustainability planning and risk management." },
-                        { id: "transition-planning", title: "Transition planning", text: "Organisations that are heavily dependent on a limited number of individuals should take steps to reduce their dependence on these individuals, including via transition and succession planning, so that the organisation is not at risk of collapse in the event of their departure." },
-                    ],
-                },
-                {
-                    section: "Insurance",
-                    sourceUrl: "https://openscholarlyinfrastructure.org/#insurance",
-                    principles: [
-                        { id: "open-source", title: "Open source", text: "All software and non-physical assets required to run the infrastructure should be available under an open-source licence. This does not include other software that may be involved with running the organisation." },
-                        { id: "open-secure-data", title: "Ensure open and secure data accessibility within legal and ethical constraints", text: "To support potential forking or replication, infrastructure should aim to make all relevant data openly available, following best practices such as applying a CC0 waiver where appropriate. This must be balanced with compliance with privacy, data protection, and security requirements. Organisations should have a clear policy outlining how private or sensitive data will be handled—particularly in the event of a transfer to another organisation—to ensure continuity, legal compliance, and responsible stewardship." },
-                        { id: "available-preserved", title: "Available and preserved", text: "It is not enough that content, data, and software be “open” if there is no practical way to obtain them. These resources should be made easily available with clear public documentation about where they are and how to access them, as well as an open licence where possible. It is not enough that “open” resources are available. In line with the Living Will, it is essential to deposit content, data, and software with at least one trusted third-party digital archive." },
-                        { id: "patent-non-assertion", title: "Patent non-assertion", text: "The organisation should commit to a patent non-assertion policy or covenant. The organisation may obtain patents to protect its own operations, but not use them to prevent the community from replicating the infrastructure." },
-                        { id: "interoperability-standards", title: "Prioritise interoperability and open standards to ensure continuity and resilience", text: "Infrastructures should adopt and support widely accepted open standards—both formal and de facto—to ensure that systems, data, and services can be replicated, migrated, or integrated with minimal disruption without the use of proprietary extensions or software. Where relevant, organisations should document dependencies on standards." },
-                    ],
-                },
-            ];
+            const BUILTIN_FRAMEWORK_FILES = ["data/frameworks/posi.json", "data/frameworks/spii.json", "data/frameworks/osr.json"];
 
-            const SPII = [
-                {
-                    section: "Openness",
-                    sourceUrl: "https://zenodo.org/record/7433767",
-                    principles: [
-                        { id: "spii-governance", title: "Governance", text: "Transparency of how the infrastructure is governed — decision-making bodies, policies, and how the community can see and influence them.", criteria: { compliant: "Governance structures, decision-making processes, and policies are fully documented and publicly available.", progress: "Some governance information is public, but key decisions or policies are not consistently documented or disclosed.", "non-compliant": "Governance is opaque; decision-making processes are not documented or accessible to the community." }, improvementAction: "Publish governance charters, meeting minutes/decisions, and policy documents openly." },
-                        { id: "spii-operations", title: "Operations", text: "Transparency of day-to-day operations — how the infrastructure runs, its procedures, and operational metrics.", criteria: { compliant: "Operational procedures, SLAs, incident reports, and key operational metrics are openly published and kept up to date.", progress: "Some operational information is shared, but not consistently or not comprehensively.", "non-compliant": "Operational practices are undocumented or not shared with users/community." }, improvementAction: "Publish operating procedures and regularly updated status/incident reports." },
-                        { id: "spii-provenance", title: "Provenance", text: "Ability to trace the origin, custody, and changes of data, content, software, and decisions within the infrastructure.", criteria: { compliant: "Full provenance (origin, versioning, custody chain) is tracked and exposed for data, software, and content.", progress: "Provenance is tracked internally but not consistently exposed or documented for users.", "non-compliant": "Provenance information is not tracked or is unavailable." }, improvementAction: "Implement provenance tracking (e.g. versioning, changelogs, PID-linked history)." },
-                        { id: "spii-economical", title: "Economical", text: "Transparency about the financial model — costs, funding sources, pricing, and how money flows through the infrastructure.", criteria: { compliant: "Detailed financials, funding sources, and cost/pricing models are openly published.", progress: "High-level financial information is available, but details (e.g. cost breakdowns, funding sources) are limited or inconsistent.", "non-compliant": "Financial information is not disclosed." }, improvementAction: "Publish an annual financial transparency report." },
-                        { id: "spii-strategical", title: "Strategical", text: "Transparency about strategic direction — roadmaps, priorities, and long-term plans.", criteria: { compliant: "Strategic/product roadmaps and priorities are publicly available and regularly updated.", progress: "A roadmap exists but is not public, not regularly updated, or lacks detail.", "non-compliant": "No strategic roadmap exists or is shared." }, improvementAction: "Publish and maintain a public strategic roadmap." },
-                        { id: "spii-accessibility", title: "Accessibility", text: "The infrastructure’s software, data, APIs, and outputs are openly accessible, using open standards and licences, secured by design, and reachable by all relevant users including citizen scientists.", criteria: { compliant: "Software is open-source, data/metadata/APIs are open, licences are clear and open, the infrastructure runs on a public/open infrastructure stack, security is built-in by design, and identity/access management supports broad access including citizen scientists.", progress: "Some components are open (e.g. open data or open-source software) but others remain closed, proprietary, or access-restricted.", "non-compliant": "Software, data, APIs, or access are closed/proprietary with no clear licensing or public access path." }, improvementAction: "Work through the open-X checklist — open-source software, open data, open APIs, open repositories, open metadata, open licences, public infrastructure stack, security-by-design, and inclusive IAM." },
-                    ],
-                },
-                {
-                    section: "Autonomy",
-                    sourceUrl: "https://zenodo.org/record/7433767",
-                    principles: [
-                        { id: "spii-stakeholder-governed", title: "Stakeholder governed/community-led", text: "The infrastructure is governed by its stakeholder community rather than a single external party.", criteria: { compliant: "A representative governing body drawn from the stakeholder community makes key decisions, with documented community input mechanisms.", progress: "Some community input is solicited, but governance is largely controlled by a single organisation or vendor.", "non-compliant": "Governance is entirely external/vendor-controlled with no community input." }, improvementAction: "Establish a stakeholder governing board and open, non-discriminatory participation." },
-                        { id: "spii-discipline-specific", title: "Discipline-specific", text: "The infrastructure is fit for the specific needs, norms, and workflows of its research discipline(s).", criteria: { compliant: "The infrastructure is explicitly designed and regularly reviewed against the needs of its target discipline(s), with documented fit-for-purpose criteria.", progress: "Some discipline-specific needs are addressed, but the infrastructure is largely generic and not tailored.", "non-compliant": "No consideration of discipline-specific needs; infrastructure is a one-size-fits-all solution regardless of context." }, improvementAction: "Run periodic fit-for-purpose reviews with discipline representatives." },
-                        { id: "spii-digital-sovereignty", title: "Digital sovereignty", text: "The infrastructure safeguards digital and academic sovereignty — control over data, infrastructure, and decisions stays with the academic community rather than being ceded to external commercial or geopolitical interests.", criteria: { compliant: "Data, infrastructure control, and critical decisions remain within community/academic governance; dependency on external vendors is actively managed with exit strategies.", progress: "Some dependency on external vendors/platforms exists, with partial mitigation (e.g. contractual safeguards) but no full exit strategy.", "non-compliant": "Critical infrastructure or data is fully dependent on external vendors/platforms with no contractual safeguards or exit plan." }, improvementAction: "Adopt value-driven procurement, balance agency against costs & risks, and put contractual clauses and exit strategies in place — consider using the Digital Autonomy Assessment Framework for a deeper dive." },
-                        { id: "spii-responsibility", title: "Responsibility", text: "Clear ownership of responsibilities for the infrastructure’s operation, decisions, and consequences.", criteria: { compliant: "Responsibilities are clearly assigned, documented, and regularly reviewed against the infrastructure’s purpose and community value.", progress: "Some responsibilities are assigned but not comprehensively documented or reviewed.", "non-compliant": "Responsibilities are unclear or undocumented." }, improvementAction: "Document a responsibility matrix (who is accountable for what) and schedule regular reviews of purpose and community value." },
-                    ],
-                },
-                {
-                    section: "Sustainability",
-                    sourceUrl: "https://zenodo.org/record/7433767",
-                    principles: [
-                        { id: "spii-financial-sustainability", title: "Financial sustainability", text: "The infrastructure has a sustainable financial model beyond short-term grants.", criteria: { compliant: "Structural/recurrent funding is secured (e.g. memberships, recurrent grants), with a mission-consistent revenue model and clear cost-of-ownership understanding.", progress: "Funding is time-limited (e.g. a one-off grant) with plans underway to secure recurrent funding.", "non-compliant": "No funding secured for the foreseeable future." }, improvementAction: "Develop mission-consistent revenue generation and a total-cost-of-ownership analysis; consider make-or-buy guidelines." },
-                        { id: "spii-human-capacity", title: "Human capacity sustainability", text: "Sufficient, resilient staffing to operate and maintain the infrastructure.", criteria: { compliant: "A dedicated, adequately resourced team maintains the infrastructure, with succession/continuity planning in place.", progress: "The infrastructure is maintained but relies heavily on one or few individuals with no succession plan.", "non-compliant": "No one is actively maintaining the infrastructure." }, improvementAction: "Build a resourcing/succession plan and invest in sustained maintenance capacity." },
-                        { id: "spii-legal-compliance", title: "Legal and institutional compliance", text: "The infrastructure meets applicable legal and institutional requirements.", criteria: { compliant: "Legal/regulatory compliance (e.g. data protection, IP, institutional policy) is actively managed, documented, and audited or certified.", progress: "Compliance is partially addressed, with known gaps being worked on.", "non-compliant": "Compliance status is unknown or has major gaps." }, improvementAction: "Conduct a compliance audit and address gaps against relevant legal/institutional requirements." },
-                        { id: "spii-enduring-availability", title: "Enduring availability", text: "The infrastructure and its outputs remain available over the long term, with plans for what happens if it winds down.", criteria: { compliant: "A documented end-of-life/succession policy exists, content is deposited with trusted third-party archives, and continuity of the public stack is supported.", progress: "Some continuity measures exist (e.g. backups) but no formal end-of-life policy or archival deposit.", "non-compliant": "No continuity plan; data/content would be lost if the infrastructure stopped." }, improvementAction: "Publish an end-of-life policy (a “living will”) and deposit outputs with a trusted third-party digital archive." },
-                    ],
-                },
-                {
-                    section: "Interoperability",
-                    sourceUrl: "https://zenodo.org/records/6074944",
-                    principles: [
-                        { id: "spii-technical-interoperability", title: "Technical interoperability", text: "Systems, data and services can be connected, migrated or integrated using open, syntactic standards.", criteria: { compliant: "The infrastructure uses open standards, persistent identifiers (PIDs), and maintains active connections to relevant international infrastructures.", progress: "Some open standards/PIDs are used, but integration with international infrastructures is limited or ad hoc.", "non-compliant": "Proprietary formats/protocols are used with no PIDs and no external connections." }, improvementAction: "Adopt open standards and PIDs, and establish connections to relevant international infrastructures." },
-                        { id: "spii-organisational-interoperability", title: "Organisational & social interoperability", text: "Shared semantics — vocabularies and ontologies — enable the infrastructure’s data and processes to be understood consistently across organisations and communities.", criteria: { compliant: "Community-recognised vocabularies/ontologies are used consistently and documented.", progress: "Some shared vocabularies are used, but inconsistently or without documentation.", "non-compliant": "No shared vocabularies/ontologies are used; semantics are ad hoc or undocumented." }, improvementAction: "Adopt and document relevant community vocabularies/ontologies." },
-                        { id: "spii-legal-interoperability", title: "Legal interoperability", text: "Clear, compatible terms of use enable data, software, and content to be legally reused and combined across systems.", criteria: { compliant: "Terms of use are clear, machine-readable where possible, and compatible with common open licences used by peer infrastructures.", progress: "Terms of use exist but are unclear, inconsistent, or not machine-readable.", "non-compliant": "No clear terms of use, or terms actively conflict with reuse/interoperability." }, improvementAction: "Publish clear, standard, machine-readable terms of use aligned with common open licences." },
-                    ],
-                },
-                {
-                    section: "Researcher-centric",
-                    sourceUrl: "https://doi.org/10.1038/s41597-020-0486-7",
-                    principles: [
-                        { id: "spii-seamless-ux", title: "Seamless user-experience", text: "The infrastructure is designed around researchers’ actual workflows and needs.", criteria: { compliant: "User-driven design practices (e.g. user research, usability testing) are embedded in the infrastructure’s development process, and adoption/satisfaction is actively monitored.", progress: "Some user feedback is gathered, but design is not systematically user-driven.", "non-compliant": "No user research or feedback process exists; design decisions are made without researcher input." }, improvementAction: "Establish ongoing user-driven design practices (user research, usability testing, feedback loops)." },
-                        { id: "spii-recognition-rewards", title: "Recognition and rewards", text: "Contributions made via the infrastructure (e.g. data, code, review, curation) are recognised and rewarded within academic evaluation and career systems.", criteria: { compliant: "The infrastructure actively supports recognition and rewards for contributions (e.g. integrates with CRediT, ORCID, institutional recognition/reward frameworks).", progress: "Some recognition mechanisms exist (e.g. basic attribution) but are not integrated with formal reward/evaluation systems.", "non-compliant": "No mechanism exists to recognise or reward contributions made via the infrastructure." }, improvementAction: "Integrate with recognition and rewards frameworks (e.g. CRediT, institutional recognition policies)." },
-                    ],
-                },
-            ];
+            async function load_builtin_frameworks() {
+                const loaded = await Promise.all(
+                    BUILTIN_FRAMEWORK_FILES.map((path) =>
+                        fetch(path).then((res) => {
+                            if (!res.ok) throw new Error(path + ": HTTP " + res.status);
+                            return res.json();
+                        })
+                    )
+                );
+                loaded.forEach((framework, i) => {
+                    if (!validate_framework_shape(framework)) throw new Error(BUILTIN_FRAMEWORK_FILES[i] + ": invalid framework shape");
+                });
+                return loaded;
+            }
 
-            const FRAMEWORKS = [
-                {
-                    id: "posi",
-                    title: "POSI v2.0 Assessment",
-                    shortName: "POSI",
-                    description: "A community-maintained framework covering governance, sustainability, and insurance against lock-in for scholarly infrastructure.",
-                    aboutHtml:
-                        "<p>The Principles of Open Scholarly Infrastructure (POSI) is a community-maintained framework (v2.0, released October 2025) covering three areas: <strong>Governance</strong> (who’s accountable and how), <strong>Sustainability</strong> (financial and operational resilience), and <strong>Insurance</strong> (protection against lock-in or failure — open source, open data, patent non-assertion). Read the full principles at <a href=\"https://openscholarlyinfrastructure.org/\">openscholarlyinfrastructure.org</a>.</p>" +
-                        "<p>Cite as: POSI Adopters (2025), <em>The Principles of Open Scholarly Infrastructure</em>, <a href=\"https://doi.org/10.14454/G8WV-VM65\">https://doi.org/10.14454/G8WV-VM65</a>.</p>",
-                    sections: POSI,
-                },
-                {
-                    id: "spii",
-                    title: "SPII v0.0.1 Assessment",
-                    shortName: "SPII",
-                    description: "A community-drafted framework (v0.0.1, June 2026 consultation) covering openness, autonomy, sustainability, interoperability, and researcher-centricity for open science infrastructure.",
-                    aboutHtml:
-                        "<p>SPII (version 0.0.1) is a draft assessment framework developed through the SPII project’s community consultation, concluding in June 2026. It reflects five principles — Openness, Autonomy, Sustainability, Interoperability, and Researcher-centric — each broken into subprinciples with concrete actions, enablers, and practices infrastructures can adopt.</p>" +
-                        "<p>The framework’s underlying values — quality and integrity, collective benefit, and equity, fairness, diversity and inclusion — draw on UNESCO’s Open Science Recommendation and the Dutch National Plan Open Science (NPOS). This is a v0.0.1 draft: principles and criteria may change as community feedback continues.</p>" +
-                        "<p>References: NPOS, <em>Open Science 2030 in the Netherlands: NPOS2030 Ambition Document and Rolling Agenda</em> (2022), <a href=\"https://zenodo.org/record/7433767\">https://zenodo.org/record/7433767</a>. UNESCO, <em>Recommendation on Open Science</em>, <a href=\"https://unesdoc.unesco.org/ark:/48223/pf0000379949\">unesdoc.unesco.org</a>. Lin, D. et al., <em>The TRUST Principles for digital repositories</em>, Sci. Data 7, 144 (2020), <a href=\"https://doi.org/10.1038/s41597-020-0486-7\">https://doi.org/10.1038/s41597-020-0486-7</a>. <em>The Principles of Open Scholarly Infrastructure</em> (v2.0, 2025), <a href=\"https://openscholarlyinfrastructure.org/\">openscholarlyinfrastructure.org</a>. Bijsterbosch, M. et al., <em>Seven Guiding Principles for Open Research Information</em> (2022), <a href=\"https://zenodo.org/records/6074944\">https://zenodo.org/records/6074944</a>. Universities of the Netherlands, <em>A new open access strategy for the Netherlands</em> (2026), <a href=\"https://doi.org/10.5281/zenodo.19548009\">https://doi.org/10.5281/zenodo.19548009</a>.</p>",
-                    draft: true,
-                    sections: SPII,
-                },
-            ];
+            let FRAMEWORKS = [];
+
 
             function framework_state_slice(framework) {
                 const entries = {};
@@ -745,8 +649,8 @@
         </div>
 
         <script id="app-render">
-            let state = initial_state();
-            let activeFrameworkId = FRAMEWORKS[0].id;
+            let state = null;
+            let activeFrameworkId = null;
             let activeTabId = "infra-description";
 
             function all_frameworks() {
@@ -1713,8 +1617,28 @@
                 set_status(details.dataset.frameworkId, details.dataset.principleId, card.dataset.status);
             });
 
-            render();
-            load_from_url_params();
+            function render_boot_error(err) {
+                console.error(err);
+                document.getElementById("app").innerHTML =
+                    '<div role="alert" data-variant="warning" class="card">' +
+                    "<p><strong>Could not load the assessment frameworks.</strong></p>" +
+                    "<p>This page loads POSI, SPII, and OSR from JSON files in <code>data/frameworks/</code> via <code>fetch()</code>, which requires the page to be served over http(s) — it will not work when opened directly as a <code>file://</code> page. Serve this directory with any static file server (for example <code>python3 -m http.server</code>, then open <code>http://localhost:8000/</code>) and reload.</p>" +
+                    "</div>";
+            }
+
+            async function boot() {
+                try {
+                    FRAMEWORKS = await load_builtin_frameworks();
+                } catch (err) {
+                    render_boot_error(err);
+                    return;
+                }
+                activeFrameworkId = FRAMEWORKS[0].id;
+                state = initial_state();
+                render();
+                await load_from_url_params();
+            }
+            boot();
         </script>
     </body>
 </html>
