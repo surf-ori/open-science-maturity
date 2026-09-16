@@ -5,7 +5,7 @@ infrastructure, classify the activities it supports, and score it against
 one or more assessment frameworks as compliant / making progress / not
 compliant with optional notes, then export the result.
 
-Four frameworks are included today, each as its own JSON file under
+Five frameworks are included today, each as its own JSON file under
 [`data/frameworks/`](data/frameworks/) — edit them directly to tweak
 principles, criteria, or copy, no code changes needed:
 
@@ -29,6 +29,16 @@ principles, criteria, or copy, no code changes needed:
   (2024): making openness the default, working with open-enabling services
   and systems, supporting infrastructure sustainability, and coordinating
   collective action.
+- **GORC International Model Assessment** (draft, [`gorc.json`](data/frameworks/gorc.json))
+  — 55 principles adapting the Research Data Alliance's [Global Open
+  Research Commons (GORC) International Model, version
+  1.1](https://doi.org/10.15497/RDA00119) (2024), an aspirational (not
+  prescriptive) framework for planning, developing, or operating a research
+  commons of any kind. By far the largest framework here, across the
+  model's ten essential elements: Governance & Leadership, Rules of
+  Participation & Access, Sustainability, Engagement, Human Capacity,
+  Interoperability, Standards & Conventions, ICT Infrastructure, Services &
+  Tools, and Research Objects.
 
 ## Features
 
@@ -42,9 +52,10 @@ principles, criteria, or copy, no code changes needed:
   unanswered) next to every principle in the sidebar navigation, so you can
   see progress at a glance without opening each section.
 - **Bring your own framework** — import a custom assessment framework
-  (JSON) at runtime alongside POSI, SPII, OSR, and the Barcelona
-  Declaration Assessment, download a template to help author one, and
-  export whichever frameworks are currently loaded.
+  (JSON) at runtime alongside POSI, SPII, OSR, the Barcelona Declaration
+  Assessment, and the GORC International Model Assessment, download a
+  template to help author one, and export whichever frameworks are
+  currently loaded.
 - **Export as JSON** — download your results and reload them later to
   continue or revise an assessment.
 - **Export as PDF** — download a report of the full assessment.
