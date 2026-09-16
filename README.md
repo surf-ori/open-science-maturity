@@ -5,7 +5,7 @@ infrastructure, classify the activities it supports, and score it against
 one or more assessment frameworks as compliant / making progress / not
 compliant with optional notes, then export the result.
 
-Five frameworks are included today, each as its own JSON file under
+Six frameworks are included today, each as its own JSON file under
 [`data/frameworks/`](data/frameworks/) — edit them directly to tweak
 principles, criteria, or copy, no code changes needed:
 
@@ -39,6 +39,11 @@ principles, criteria, or copy, no code changes needed:
   Participation & Access, Sustainability, Engagement, Human Capacity,
   Interoperability, Standards & Conventions, ICT Infrastructure, Services &
   Tools, and Research Objects.
+- **FAIR Principles Assessment** (draft, [`fair.json`](data/frameworks/fair.json))
+  — 15 principles transcribing the [FAIR Guiding
+  Principles](https://www.gofair.foundation/fair-principles) (Wilkinson et
+  al., 2016) verbatim: Findable, Accessible, Interoperable, and Reusable,
+  covering both data and metadata.
 
 ## Features
 
@@ -53,9 +58,9 @@ principles, criteria, or copy, no code changes needed:
   see progress at a glance without opening each section.
 - **Bring your own framework** — import a custom assessment framework
   (JSON) at runtime alongside POSI, SPII, OSR, the Barcelona Declaration
-  Assessment, and the GORC International Model Assessment, download a
-  template to help author one, and export whichever frameworks are
-  currently loaded.
+  Assessment, the GORC International Model Assessment, and the FAIR
+  Principles Assessment, download a template to help author one, and
+  export whichever frameworks are currently loaded.
 - **Export as JSON** — download your results and reload them later to
   continue or revise an assessment.
 - **Export as PDF** — download a report of the full assessment.
