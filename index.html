@@ -151,6 +151,48 @@
                 color: var(--muted-foreground);
             }
 
+            /* oat.min.css already puts overflow-y: auto on a dialog's direct
+               content div (:is(&,&>form)>:is(p,div,section)), but neither
+               <dialog> nor its <form> is a flex container, so that div's
+               height is just its own content's natural size — nothing ever
+               constrains it smaller than the content, so overflow-y: auto
+               never actually triggers a scrollbar; content past the
+               dialog's own max-height: 85vh (also Oat's) was just clipped
+               with no way to reach it. Making dialog/form a flex column and
+               letting the content div grow/shrink (flex: 1; min-height: 0)
+               within that fixed-height column is what makes it scroll.
+               The [open] here is load-bearing, not decoration: the browser's
+               UA stylesheet sets dialog:not([open]) { display: none }, and a
+               bare, unscoped `dialog { display: flex }` would override that
+               default even while closed — Oat's own closed-state styling
+               (opacity: 0, transform: scale(.95)) only fades the dialog out,
+               it doesn't rely on display; a closed-but-display:flex dialog
+               stays in the layout, fixed and inset: 0 per Oat, invisible but
+               still catching every click on the page underneath it. Caught this by a
+               Playwright click failing with a "dialog#changelog-dialog
+               subtree intercepts pointer events" error on an ordinary,
+               unrelated button, on a page where neither dialog had ever been
+               opened — exactly the kind of bug a screenshot alone would
+               never show, since the dialog really is invisible right up
+               until something tries to click through where it invisibly
+               sits. */
+            dialog[open] {
+                display: flex;
+                flex-direction: column;
+            }
+
+            dialog > form {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            #about-dialog-content,
+            #changelog-dialog-content {
+                flex: 1;
+                min-height: 0;
+            }
+
             #changelog-dialog-content dt {
                 font-weight: var(--font-medium);
                 color: var(--muted-foreground);
@@ -237,6 +279,28 @@
             .field input,
             .field textarea {
                 width: 100%;
+            }
+
+            /* The badge accordion sits at the very bottom of the sidebar
+               (aside[data-sidebar] pins #sidebar-footer there via Oat's own
+               margin-block-start: auto), so opening it "downward" the way a
+               <details> normally does would either push it off the visible
+               area or look like it's expanding into nothing. column-reverse
+               keeps <summary> (the first DOM child) anchored at the visual
+               bottom of the box and stacks the rest of the accordion's
+               content above it instead, so it reads as unfurling upward.
+               Oat's own details/summary styling (border, chevron rotation on
+               [open], hover) is left as-is — only direction and the
+               per-child margin (replaced with a flex gap, so spacing stays
+               even regardless of DOM order) are overridden here. */
+            #sidebar-footer > details {
+                display: flex;
+                flex-direction: column-reverse;
+                gap: var(--space-3);
+            }
+
+            #sidebar-footer > details > *:not(summary) {
+                margin: 0;
             }
 
             #sidebar-footer button {
@@ -514,6 +578,7 @@
 
             const CHANGELOG_HTML =
                 "<dl>" +
+                '<dt>2026-09-16</dt><dd>Fixed the About and Changelog dialogs not scrolling — long content past the dialog’s own height limit was simply clipped, with no way to reach it. Moved the assessment badge, and its SVG/PNG/embed export buttons, into a collapsed-by-default accordion at the bottom of the sidebar (opens upward, so it doesn’t push content off-screen) instead of always taking up sidebar space. Added a third badge export option, “Embed badge”, which copies a self-contained HTML snippet — including the same hover-to-reveal interaction as the in-app badge — that can be pasted directly into another site’s HTML; it is a snapshot of the current report at the moment it’s copied, not a live embed.</dd>' +
                 '<dt>2026-09-15</dt><dd>Fixed the top bar genuinely overflowing horizontally on narrow phones (confirmed on real Android Chrome and Firefox), which the previous “fixed the title wrapping” entry below did not fully resolve on its own: <code>nav[data-topnav]</code> is a CSS Grid item and — like a flex item — defaults to <code>min-width: auto</code>, letting it grow wider than its column to fit its buttons; it now also wraps its buttons onto extra rows on narrow viewports. Also fixed the mobile menu (hamburger) icon rendering invisible — white-on-white due to an inherited button text color, not a missing icon glyph as it first appeared — and made the dismissible toast notices position themselves below the top bar correctly now that its height can vary.</dd>' +
                 '<dt>2026-09-15</dt><dd>Design pass: fixed the <code>--font-sans</code> token (“Source Sans 3”) never actually loading, so the page was silently rendering system fonts everywhere including the exported badge; added a hover/active state to the compliant/progress/non-compliant picker cards, which previously gave no feedback on mouse interaction; replaced every <code>window.alert()</code> (JSON import errors, partial framework imports, failed badge downloads) with a dismissible toast notice; fixed the top bar’s title wrapping across several lines on narrow viewports instead of truncating; added a shadow to each framework tab’s panel to match Oat’s own card styling, and page description/social-sharing meta tags.</dd>' +
                 '<dt>2026-09-15</dt><dd>The three built-in frameworks (POSI, SPII, OSR) moved out of <code>index.html</code> into standalone JSON files under <code>data/frameworks/</code>, loaded via <code>fetch()</code> at startup — edit a framework’s principles or criteria directly in its JSON file, no code change needed. As a result, opening <code>index.html</code> directly as a <code>file://</code> page no longer works (browsers block that fetch); serve the directory with any static file server instead, as already recommended for the <code>?report=</code>/<code>?framework=</code> URL-parameter loader. A clear on-page message explains this if frameworks fail to load.</dd>' +
@@ -1002,9 +1067,11 @@
                 const footer = document.getElementById("sidebar-footer");
                 footer.innerHTML = "";
 
-                const heading = document.createElement("h3");
-                heading.textContent = "Assessment badge";
-                footer.appendChild(heading);
+                const details = document.createElement("details");
+
+                const summary = document.createElement("summary");
+                summary.textContent = "Assessment badge";
+                details.appendChild(summary);
 
                 const badgeWrap = document.createElement("div");
                 badgeWrap.className = "badge-wrap";
@@ -1016,17 +1083,24 @@
                 hovercard.id = "badge-hovercard";
                 hovercard.className = "hovercard";
                 badgeWrap.appendChild(hovercard);
-                footer.appendChild(badgeWrap);
+                details.appendChild(badgeWrap);
 
                 const svgBtn = document.createElement("button");
                 svgBtn.textContent = "Download badge (SVG)";
                 svgBtn.addEventListener("click", download_badge_svg);
-                footer.appendChild(svgBtn);
+                details.appendChild(svgBtn);
 
                 const pngBtn = document.createElement("button");
                 pngBtn.textContent = "Download badge (PNG)";
                 pngBtn.addEventListener("click", download_badge_png);
-                footer.appendChild(pngBtn);
+                details.appendChild(pngBtn);
+
+                const embedBtn = document.createElement("button");
+                embedBtn.textContent = "Embed badge";
+                embedBtn.addEventListener("click", copy_badge_embed);
+                details.appendChild(embedBtn);
+
+                footer.appendChild(details);
             }
 
             function render_header() {
@@ -1665,6 +1739,51 @@
                     html += "<div>" + escape_xml(section.section) + ": " + compliant + "✓ " + progress + "◐ " + nonCompliant + "✗</div>";
                 });
                 return html;
+            }
+
+            // Self-contained: everything the badge needs (SVG markup, hovercard
+            // content, hover-reveal CSS) is inlined into the returned string
+            // using plain hex colors rather than this app's own CSS custom
+            // properties, since a page this gets pasted into won't have those
+            // tokens defined. It's a snapshot of `state` at call time, not a
+            // live embed — there's no backend for a pasted snippet to call
+            // back into, so "self-contained" is the only kind of embed this
+            // tool can offer.
+            function build_badge_embed_html(state) {
+                const svg = build_badge_svg_markup(state);
+                const hovercardInner = build_badge_hovercard_html(state);
+                return (
+                    '<div class="osmat-badge-embed" tabindex="0" style="position:relative;display:inline-block;font-family:system-ui,sans-serif;">' +
+                    "<style>" +
+                    ".osmat-badge-embed .osmat-badge-hovercard{position:absolute;left:0;right:0;bottom:100%;z-index:10;background:#ffffff;color:#18181b;border:1px solid #e4e4e7;border-radius:8px;padding:12px;font-size:12px;line-height:1.5;opacity:0;visibility:hidden;transition:opacity .15s ease;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.12)}" +
+                    ".osmat-badge-embed:hover .osmat-badge-hovercard,.osmat-badge-embed:focus-within .osmat-badge-hovercard{opacity:1;visibility:visible}" +
+                    "</style>" +
+                    svg +
+                    '<div class="osmat-badge-hovercard">' + hovercardInner + "</div>" +
+                    "</div>"
+                );
+            }
+
+            function download_badge_embed() {
+                const html = build_badge_embed_html(state);
+                const blob = new Blob([html], { type: "text/html" });
+                trigger_download(URL.createObjectURL(blob), "badge-embed.html");
+            }
+
+            async function copy_badge_embed() {
+                const html = build_badge_embed_html(state);
+                if (!window.isSecureContext || !navigator.clipboard) {
+                    download_badge_embed();
+                    show_toast("Clipboard access isn’t available here; downloaded the embed code as an HTML file instead.", "warning");
+                    return;
+                }
+                try {
+                    await navigator.clipboard.writeText(html);
+                    show_toast("Embed code copied to clipboard — paste it into your site’s HTML.", "success");
+                } catch (err) {
+                    download_badge_embed();
+                    show_toast("Couldn’t copy to clipboard; downloaded the embed code as an HTML file instead.", "warning");
+                }
             }
 
             function trigger_download(href, filename) {
