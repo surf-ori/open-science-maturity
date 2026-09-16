@@ -5,7 +5,7 @@ infrastructure, classify the activities it supports, and score it against
 one or more assessment frameworks as compliant / making progress / not
 compliant with optional notes, then export the result.
 
-Three frameworks are included today, each as its own JSON file under
+Four frameworks are included today, each as its own JSON file under
 [`data/frameworks/`](data/frameworks/) — edit them directly to tweak
 principles, criteria, or copy, no code changes needed:
 
@@ -23,6 +23,12 @@ principles, criteria, or copy, no code changes needed:
   concern (funding, infrastructure, academic freedom, safety,
   disinformation), each scored across five resilience types (prevention,
   protection, resistance, withstanding, repair).
+- **Barcelona Declaration Assessment** (draft, [`bd.json`](data/frameworks/bd.json))
+  — 8 principles adapting the four commitments of the [Barcelona
+  Declaration on Open Research Information](https://www.barcelona-declaration.org)
+  (2024): making openness the default, working with open-enabling services
+  and systems, supporting infrastructure sustainability, and coordinating
+  collective action.
 
 ## Features
 
@@ -36,8 +42,9 @@ principles, criteria, or copy, no code changes needed:
   unanswered) next to every principle in the sidebar navigation, so you can
   see progress at a glance without opening each section.
 - **Bring your own framework** — import a custom assessment framework
-  (JSON) at runtime alongside POSI, SPII, and OSR, download a template to
-  help author one, and export whichever frameworks are currently loaded.
+  (JSON) at runtime alongside POSI, SPII, OSR, and the Barcelona
+  Declaration Assessment, download a template to help author one, and
+  export whichever frameworks are currently loaded.
 - **Export as JSON** — download your results and reload them later to
   continue or revise an assessment.
 - **Export as PDF** — download a report of the full assessment.
